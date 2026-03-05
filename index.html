@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="pt-BR" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantão de Atendimento Acadêmico</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'jakarta': ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            primary: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            surface: '#ffffff',
+            background: '#f8fafc',
+            text: '#1e293b',
+            accent: '#10b981',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    
+    .app-wrapper {
+      min-height: 100%;
+      width: 100%;
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(1.4); opacity: 0; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    .pulse-ring {
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+    
+    .float-animation {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .btn-enter {
+      transition: all 0.2s ease;
+    }
+    
+    .btn-enter:hover {
+      transform: scale(1.02);
+    }
+    
+    .btn-enter:active {
+      transform: scale(0.98);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-gradient {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #f0f9ff 100%);
+    }
+    
+    .live-indicator {
+      position: relative;
+    }
+    
+    .live-indicator::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="font-jakarta bg-background text-text h-full overflow-auto">
+  <div class="app-wrapper"><!-- Hero Section -->
+   <header id="hero-section" class="hero-gradient">
+    <div class="max-w-6xl mx-auto px-4 py-12 md:py-20">
+     <div class="text-center"><!-- Icons -->
+      <div class="flex justify-center gap-4 mb-6">
+       <div class="w-14 h-14 bg-white rounded-2xl shadow-lg flex items-center justify-center float-animation" style="animation-delay: 0s;">
+        <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+       </div>
+       <div class="w-14 h-14 bg-white rounded-2xl shadow-lg flex items-center justify-center float-animation" style="animation-delay: 0.2s;">
+        <svg class="w-7 h-7 text-accent" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+       </div>
+       <div class="w-14 h-14 bg-white rounded-2xl shadow-lg flex items-center justify-center float-animation" style="animation-delay: 0.4s;">
+        <svg class="w-7 h-7 text-primary-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+       </div>
+      </div><!-- Title -->
+      <h1 id="main-title" class="text-3xl md:text-5xl font-bold mb-4 gradient-text">Plantão de Atendimento Acadêmico ao Vivo</h1><!-- Subtitle -->
+      <p id="subtitle" class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-8">Escolha um horário disponível e entre diretamente na sala de atendimento para tirar suas dúvidas com nossa equipe.</p><!-- CTA Button --> <a href="#schedule" class="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg shadow-primary-600/30 btn-enter">
+       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+       </svg> Ver horários disponíveis </a>
+     </div>
+    </div>
+   </header><!-- Countdown Section -->
+   <section class="max-w-6xl mx-auto px-4 -mt-6 relative z-10">
+    <div id="countdown-container" class="bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
+     <div id="countdown-content" class="flex flex-col md:flex-row items-center justify-center gap-4"><!-- Content will be dynamically updated -->
+     </div>
+    </div>
+   </section><!-- Schedule Section -->
+   <section id="schedule" class="max-w-6xl mx-auto px-4 py-12">
+    <div class="text-center mb-10">
+     <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mb-2">Agenda Semanal</h2>
+     <p class="text-slate-500">Selecione um horário para entrar na sala de atendimento</p>
+    </div>
+    <div id="schedule-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"><!-- Schedule cards will be rendered here -->
+    </div>
+   </section><!-- Instructions Section -->
+   <section class="bg-white border-y border-slate-100">
+    <div class="max-w-4xl mx-auto px-4 py-12">
+     <h2 class="text-2xl font-bold text-center text-slate-800 mb-8">Como participar</h2>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="text-center p-6">
+       <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><span class="text-3xl">1️⃣</span>
+       </div>
+       <h3 class="font-semibold text-slate-800 mb-2">Escolha um horário</h3>
+       <p class="text-slate-500 text-sm">Encontre o melhor horário disponível na agenda semanal</p>
+      </div>
+      <div class="text-center p-6">
+       <div class="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4"><span class="text-3xl">2️⃣</span>
+       </div>
+       <h3 class="font-semibold text-slate-800 mb-2">Clique em Entrar</h3>
+       <p class="text-slate-500 text-sm">Pressione o botão "Entrar no atendimento"</p>
+      </div>
+      <div class="text-center p-6">
+       <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4"><span class="text-3xl">3️⃣</span>
+       </div>
+       <h3 class="font-semibold text-slate-800 mb-2">Acesse o Google Meet</h3>
+       <p class="text-slate-500 text-sm">Você será direcionado automaticamente para a sala</p>
+      </div>
+     </div>
+     <div class="mt-8 bg-slate-50 rounded-xl p-6 text-center">
+      <p class="text-slate-600"><span class="font-semibold">ℹ️ Observação:</span> Não é necessário agendamento prévio. O atendimento é coletivo e aberto para todos os alunos.</p>
+     </div>
+    </div>
+   </section><!-- Footer -->
+   <footer class="bg-slate-800 text-white">
+    <div class="max-w-6xl mx-auto px-4 py-10 text-center">
+     <div class="flex justify-center mb-4">
+      <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+       <svg class="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+       </svg>
+      </div>
+     </div>
+     <h3 id="footer-title" class="text-xl font-semibold mb-2">Equipe de Suporte Acadêmico</h3>
+     <p id="footer-text" class="text-slate-400 max-w-lg mx-auto">Atendimento ao vivo para dúvidas sobre disciplinas, acesso ao ambiente virtual e orientações acadêmicas.</p>
+    </div>
+   </footer>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      main_title: 'Plantão de Atendimento Acadêmico ao Vivo',
+      subtitle: 'Escolha um horário disponível e entre diretamente na sala de atendimento para tirar suas dúvidas com nossa equipe.',
+      meet_link: 'https://meet.google.com/sgf-utxh-tdy',
+      footer_title: 'Equipe de Suporte Acadêmico',
+      footer_text: 'Atendimento ao vivo para dúvidas sobre disciplinas, acesso ao ambiente virtual e orientações acadêmicas.',
+      background_color: '#f8fafc',
+      surface_color: '#ffffff',
+      text_color: '#1e293b',
+      primary_color: '#2563eb',
+      accent_color: '#10b981'
+    };
+
+    // Schedule data
+    const scheduleData = [
+      {
+        day: 'Segunda-feira',
+        dayShort: 'SEG',
+        dayIndex: 1,
+        slots: [
+          { time: '13:00', attendant: 'Mateus Novaes' },
+          { time: '18:00', attendant: 'Mateus Novaes' }
+        ]
+      },
+      {
+        day: 'Terça-feira',
+        dayShort: 'TER',
+        dayIndex: 2,
+        slots: [
+          { time: '13:00', attendant: 'Anna Virgilio' },
+          { time: '18:00', attendant: 'Anna Virgilio' }
+        ]
+      },
+      {
+        day: 'Quarta-feira',
+        dayShort: 'QUA',
+        dayIndex: 3,
+        slots: [
+          { time: '13:00', attendant: 'Constance' },
+          { time: '18:00', attendant: 'Constance' }
+        ]
+      },
+      {
+        day: 'Quinta-feira',
+        dayShort: 'QUI',
+        dayIndex: 4,
+        slots: [
+          { time: '13:00', attendant: 'Mateus Novaes' },
+          { time: '13:00', attendant: 'Anna Virgilio' }
+        ]
+      },
+      {
+        day: 'Sexta-feira',
+        dayShort: 'SEX',
+        dayIndex: 5,
+        slots: [
+          { time: '13:00', attendant: 'Constance' },
+          { time: '18:00', attendant: 'Letícia Bastos' }
+        ]
+      }
+    ];
+
+    // Get current status for a slot
+    function getSlotStatus(dayIndex, time) {
+      const now = new Date();
+      const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      const [hours, minutes] = time.split(':').map(Number);
+      
+      // Create date object for the slot
+      const slotDate = new Date(now);
+      const dayDiff = dayIndex - currentDay;
+      slotDate.setDate(slotDate.getDate() + dayDiff);
+      slotDate.setHours(hours, minutes, 0, 0);
+      
+      // Slot end time (1 hour duration)
+      const slotEnd = new Date(slotDate);
+      slotEnd.setHours(slotEnd.getHours() + 1);
+      
+      if (now >= slotDate && now < slotEnd) {
+        return 'live';
+      } else if (slotDate > now) {
+        return 'upcoming';
+      }
+      return 'past';
+    }
+
+    // Find next upcoming slot
+    function findNextSlot() {
+      const now = new Date();
+      const currentDay = now.getDay();
+      let nearestSlot = null;
+      let nearestTime = Infinity;
+
+      // Check current week and next week
+      for (let weekOffset = 0; weekOffset < 2; weekOffset++) {
+        for (const day of scheduleData) {
+          for (const slot of day.slots) {
+            const [hours, minutes] = slot.time.split(':').map(Number);
+            const slotDate = new Date(now);
+            let dayDiff = day.dayIndex - currentDay + (weekOffset * 7);
+            if (dayDiff < 0 && weekOffset === 0) dayDiff += 7;
+            slotDate.setDate(slotDate.getDate() + dayDiff);
+            slotDate.setHours(hours, minutes, 0, 0);
+            
+            const slotEnd = new Date(slotDate);
+            slotEnd.setHours(slotEnd.getHours() + 1);
+
+            // If happening now
+            if (now >= slotDate && now < slotEnd) {
+              return { slot, day, date: slotDate, isLive: true };
+            }
+
+            // If upcoming
+            if (slotDate > now && slotDate.getTime() < nearestTime) {
+              nearestTime = slotDate.getTime();
+              nearestSlot = { slot, day, date: slotDate, isLive: false };
+            }
+          }
+        }
+      }
+
+      return nearestSlot;
+    }
+
+    // Update countdown display
+    function updateCountdown(config) {
+      const container = document.getElementById('countdown-content');
+      const nextSlot = findNextSlot();
+      const meetLink = config.meet_link || defaultConfig.meet_link;
+
+      if (!nextSlot) {
+        container.innerHTML = `
+          <div class="text-center">
+            <p class="text-slate-500">Nenhum atendimento programado no momento</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (nextSlot.isLive) {
+        container.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <div class="w-4 h-4 bg-accent rounded-full"></div>
+              <div class="absolute inset-0 w-4 h-4 bg-accent rounded-full pulse-ring"></div>
+            </div>
+            <span class="text-lg md:text-xl font-semibold text-slate-800">
+              Atendimento acontecendo agora
+            </span>
+          </div>
+          <div class="text-slate-500">com <span class="font-medium text-slate-700">${nextSlot.slot.attendant}</span></div>
+          <a href="${meetLink}" target="_blank" rel="noopener noreferrer" 
+             class="inline-flex items-center gap-2 bg-accent hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-xl btn-enter shadow-lg shadow-accent/30">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            Entrar agora
+          </a>
+        `;
+      } else {
+        const now = new Date();
+        const diff = nextSlot.date.getTime() - now.getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        
+        let timeText = '';
+        if (hours > 0) {
+          timeText = `${hours}h ${minutes}min`;
+        } else {
+          timeText = `${minutes} minutos`;
+        }
+
+        container.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-sm text-slate-500">Próximo atendimento começa em</p>
+              <p class="text-2xl font-bold text-primary-600">${timeText}</p>
+            </div>
+          </div>
+          <div class="hidden md:block h-8 w-px bg-slate-200"></div>
+          <div class="text-center md:text-left">
+            <p class="text-sm text-slate-500">${nextSlot.day.day} às ${nextSlot.slot.time}</p>
+            <p class="font-medium text-slate-700">com ${nextSlot.slot.attendant}</p>
+          </div>
+        `;
+      }
+    }
+
+    // Render schedule grid
+    function renderSchedule(config) {
+      const grid = document.getElementById('schedule-grid');
+      const meetLink = config.meet_link || defaultConfig.meet_link;
+      const now = new Date();
+      const currentDay = now.getDay();
+
+      grid.innerHTML = scheduleData.map(day => {
+        const isToday = day.dayIndex === currentDay;
+        
+        return `
+          <div class="bg-white rounded-2xl shadow-lg border ${isToday ? 'border-primary-200 ring-2 ring-primary-100' : 'border-slate-100'} overflow-hidden card-hover">
+            <div class="p-4 ${isToday ? 'bg-primary-50' : 'bg-slate-50'} border-b border-slate-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-bold ${isToday ? 'text-primary-700' : 'text-slate-700'}">${day.day}</h3>
+                  ${isToday ? '<span class="text-xs font-medium text-primary-600 bg-primary-100 px-2 py-0.5 rounded-full">Hoje</span>' : ''}
+                </div>
+                <span class="text-2xl font-bold ${isToday ? 'text-primary-600' : 'text-slate-300'}">${day.dayShort}</span>
+              </div>
+            </div>
+            <div class="p-4 space-y-3">
+              ${day.slots.map(slot => {
+                const status = getSlotStatus(day.dayIndex, slot.time);
+                let statusBadge = '';
+                let buttonClass = '';
+                let buttonText = 'Entrar no atendimento';
+                
+                if (status === 'live') {
+                  statusBadge = `
+                    <div class="flex items-center gap-1.5 text-xs font-medium text-accent bg-accent/10 px-2 py-1 rounded-full">
+                      <div class="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                      Ao vivo
+                    </div>
+                  `;
+                  buttonClass = 'bg-accent hover:bg-emerald-600 shadow-accent/30';
+                  buttonText = 'Entrar agora';
+                } else if (status === 'upcoming') {
+                  statusBadge = `
+                    <div class="text-xs font-medium text-primary-600 bg-primary-50 px-2 py-1 rounded-full">
+                      Próximo
+                    </div>
+                  `;
+                  buttonClass = 'bg-primary-600 hover:bg-primary-700 shadow-primary-600/30';
+                } else {
+                  statusBadge = `
+                    <div class="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-1 rounded-full">
+                      Encerrado
+                    </div>
+                  `;
+                  buttonClass = 'bg-slate-300 cursor-not-allowed';
+                }
+
+                return `
+                  <div class="bg-slate-50 rounded-xl p-4 ${status === 'live' ? 'ring-2 ring-accent/20' : ''}">
+                    <div class="flex items-center justify-between mb-3">
+                      <span class="text-2xl font-bold text-slate-800">${slot.time}</span>
+                      ${statusBadge}
+                    </div>
+                    <div class="flex items-center gap-2 mb-3">
+                      <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-semibold text-sm">
+                        ${slot.attendant.charAt(0)}
+                      </div>
+                      <span class="text-sm font-medium text-slate-700">${slot.attendant}</span>
+                    </div>
+                    ${status !== 'past' ? `
+                      <a href="${meetLink}" target="_blank" rel="noopener noreferrer" 
+                         class="w-full flex items-center justify-center gap-2 ${buttonClass} text-white font-semibold py-2.5 px-4 rounded-lg btn-enter shadow-lg text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        ${buttonText}
+                      </a>
+                    ` : `
+                      <div class="w-full flex items-center justify-center gap-2 bg-slate-200 text-slate-500 font-medium py-2.5 px-4 rounded-lg text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Encerrado
+                      </div>
+                    `}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Apply configuration to UI
+    async function onConfigChange(config) {
+      // Update text content
+      document.getElementById('main-title').textContent = config.main_title || defaultConfig.main_title;
+      document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+      document.getElementById('footer-title').textContent = config.footer_title || defaultConfig.footer_title;
+      document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
+
+      // Apply colors
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const accentColor = config.accent_color || defaultConfig.accent_color;
+
+      document.body.style.backgroundColor = bgColor;
+      document.body.style.color = textColor;
+
+      // Update countdown and schedule
+      updateCountdown(config);
+      renderSchedule(config);
+    }
+
+    // Map to capabilities for color editing
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => { config.surface_color = value; window.elementSdk.setConfig({ surface_color: value }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => config.primary_color || defaultConfig.primary_color,
+            set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+          },
+          {
+            get: () => config.accent_color || defaultConfig.accent_color,
+            set: (value) => { config.accent_color = value; window.elementSdk.setConfig({ accent_color: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    // Map to edit panel values
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['main_title', config.main_title || defaultConfig.main_title],
+        ['subtitle', config.subtitle || defaultConfig.subtitle],
+        ['meet_link', config.meet_link || defaultConfig.meet_link],
+        ['footer_title', config.footer_title || defaultConfig.footer_title],
+        ['footer_text', config.footer_text || defaultConfig.footer_text]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    } else {
+      // Fallback for preview
+      onConfigChange(defaultConfig);
+    }
+
+    // Update countdown every minute
+    setInterval(() => {
+      const config = window.elementSdk?.config || defaultConfig;
+      updateCountdown(config);
+      renderSchedule(config);
+    }, 60000);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d7a4714571fca4a',t:'MTc3MjcyNTg0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
