@@ -1101,6 +1101,26 @@
         renderHeroCountdown();
       }, 60000);
     });
+
+    // Detecta se veio do e-mail (tem ?rating= ou ?utm_source=email na URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    const veioDoEmail = urlParams.has('utm_source') || urlParams.has('rating');
+
+    if (veioDoEmail) {
+      setTimeout(() => {
+        openRatingModal();
+        // Pré-preenche mentor vindo da URL
+        const mentorParam = urlParams.get('mentor');
+        if (mentorParam) {
+          document.getElementById('rating-mentor').value = mentorParam;
+        }
+        // Pré-preenche estrelas vindas da URL
+        const ratingParam = parseInt(urlParams.get('rating'));
+        if (ratingParam >= 1 && ratingParam <= 5) {
+          setRatingStars(ratingParam);
+        }
+      }, 1000);
+    }
   </script>
 </body>
 </html>
